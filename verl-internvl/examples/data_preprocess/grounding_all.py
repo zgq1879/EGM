@@ -18,7 +18,6 @@ import re
 import random
 import datasets
 
-# 图片根目录从环境变量读取，未设置时使用默认值
 BASE_IMG_PATH = os.getenv("BASE_IMG_PATH")
 
 
@@ -41,7 +40,6 @@ def make_map_fn(split: str, fmt: str):
         orig_h = example.get("height")
         orig_w = example.get("width")
 
-        # 归一化 image 路径
         img_rel = example["image"]
         img_path = os.path.join(BASE_IMG_PATH, img_rel)
 
@@ -51,14 +49,12 @@ def make_map_fn(split: str, fmt: str):
         else:
             print(f"[Warning] Image not found: {img_path}")
 
-        # 构造问题
         if fmt == "qwen" and "sent" in example:
             prompt = "<image>\nLocate {sent}, output its bbox coordinates using JSON format"
             question_raw = prompt.format(sent=example["sent"])
         else:
             question_raw = conversation[0]["value"]
 
-        # 构造答案
         answer_raw = conversation[1]["value"]
         solution = extract_answer(answer_raw)
 

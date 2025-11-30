@@ -1,11 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-BASE_IMG_PATH="${BASE_IMG_PATH:-/storage/openpsi/data}"
-export BASE_IMG_PATH
-
-INPUT_DIR="$your_input_directory"
-OUTPUT_DIR="$your_output_directory"
+VAL_DIR=${VAL_DIR}
+OUTPUT_DIR=${OUTPUT_DIR}
 
 VALID_FILES=(
   "refcoco_testA.jsonl"

@@ -20,6 +20,7 @@ def extract_box_from_text(s: str) -> List[float]:
     def _extract_from_text(text: str) -> List[float]:
         boxes = re.findall(r'\[([^\[\]]+)\]', text)
         if boxes:
+
             candidate = boxes[-1]
             nums = _NUM_RE.findall(candidate)
         else:
@@ -39,7 +40,7 @@ def extract_box_from_text(s: str) -> List[float]:
             except Exception:
                 return []
             if not math.isfinite(x):
-                return [] 
+                return []  
             vals.append(x)
         
         x1, y1, x2, y2 = vals
@@ -110,7 +111,7 @@ def _length_penalty_tokens(tokens, max_tokens: int = 512, step: int = 50, per_st
     if n <= max_tokens:
         return 0.0
     over = n - max_tokens
-    chunks = (over + step - 1) // step  
+    chunks = (over + step - 1) // step
     return chunks * per_step
 
 def _has_consecutive_repeats(tokens, min_run: int = 7) -> bool:
@@ -218,6 +219,5 @@ def compute_score(
             print("[CASE]", json.dumps(case, ensure_ascii=False))
 
     return reward
-
 
 

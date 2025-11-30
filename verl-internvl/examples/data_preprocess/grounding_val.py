@@ -112,7 +112,6 @@ if __name__ == "__main__":
     num_workers = int(args.num_workers)
     fmt = args.format
 
-    # 解析 test 文件路径
     test_files = []
     for f in args.test_files:
         if os.path.isabs(f):
@@ -138,6 +137,6 @@ if __name__ == "__main__":
         mixed_slices.append(ds_t.shuffle(seed=42).select(range(k)))
 
     mixed = datasets.concatenate_datasets(mixed_slices).shuffle(seed=42)
-    out_test = os.path.join(output_dir, f"test_grounding_{fmt}.parquet")
+    out_test = os.path.join(output_dir, f"val_grounding.parquet")
     mixed.to_parquet(out_test)
-    print(f"[grounding preprocess] test samples: {len(mixed)}, wrote {out_test}")
+    print(f"[grounding preprocess] Val samples: {len(mixed)}, wrote {out_test}")

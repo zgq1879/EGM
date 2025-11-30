@@ -2,47 +2,40 @@
 set -euo pipefail
 set -x
 
+PROJECT_NAME=${PROJECT_NAME}
+TASK_NAME=${TASK_NAME}
+DATA_DIR=${DATA_DIR}
+OUTPUT_DIR=${OUTPUT_DIR}
+MODEL_PATH=${MODEL_PATH}
+
 export RAY_MASTER_PORT=6379
 export RAY_DASHBOARD_PORT=8265
 export MASTER_PORT=34235
 export TF_CPP_MIN_LOG_LEVEL=3
 
-# Ray 临时目录
 export RAY_TMPDIR=/dev/shm/ray_wwy
 rm -rf "${RAY_TMPDIR}"
 mkdir -p "${RAY_TMPDIR}"
 
-# 任务名
-export PROJECT_NAME="internvl3_2b_amodaling_rl"
-if echo "$PROJECT_NAME" | grep -q "qwen"; then
-    export PYTHONPATH=/storage/openpsi/users/lichangye.lcy/sglang/python
-    echo "PYTHONPATH set for qwen project."
-else
-    echo "PROJECT_NAME does not contain 'qwen'. No PYTHONPATH set."
-fi
-TASK_NAME="trial1_cot"
+
 echo "TASK_NAME: $TASK_NAME"
 echo "PROJECT_NAME: $PROJECT_NAME"
+
 unset ROCR_VISIBLE_DEVICES || true
 unset HIP_VISIBLE_DEVICES || true
-export OUTPUT_PATH="/storage/openpsi/models/${PROJECT_NAME}/${TASK_NAME}"
+
+export OUTPUT_PATH="${OUTPUT_DIR}/${TASK_NAME}"
 export JOBLOG="${OUTPUT_PATH}/training.log"
 RAY_WORKING_DIR="${OUTPUT_PATH}/ray_working_dir"
 
-mkdir -p "${OUTPUT_PATH}"  "${RAY_WORKING_DIR}"
+mkdir -p "${OUTPUT_PATH}" "${RAY_WORKING_DIR}"
 
-# export TRITON_CACHE_DIR="/dev/shm/triton_wwy/"
-# export VLLM_CACHE_ROOT="/dev/shm/vllmca_wwy/"
-
-# 让下游程序自动找到本机 head
 export RAY_ADDRESS="127.0.0.1:${RAY_MASTER_PORT}"
 
-# 确保干净启动；忽略未运行时的报错
 ray stop --force || true
 
 echo "start ray head" &>> "${JOBLOG}"
 
-# 启动本机 head（单机 8 卡）
 ray start \
   --head \
   --port="${RAY_MASTER_PORT}" \
@@ -53,20 +46,17 @@ ray start \
 
 echo "Ray head started on ${RAY_ADDRESS}" &>> "${JOBLOG}"
 
-# 可选：展示集群状态
 sleep 3
 ray status || true
 ray list nodes || true
 echo "RAY_ADDRESS=${RAY_ADDRESS}"
 echo "Dashboard: http://$(hostname -I | awk '{print $1}'):${RAY_DASHBOARD_PORT}"
 
-# Dynamically compute the number of nodes and total GPU engines
 NUM_GPUS_PER_NODE=8
 MICRO_TRAIN_BATCH_SIZE=32
 MICRO_ROLLOUT_BATCH_SIZE=32
 ROLLOUT_BATCH_SIZE=256
 N_SAMPLES_PER_PROMPT=16
->>>>>>> 20eb2f3cf94735d6942cb0f07f93efcfab0e17b6
 TENSOR_PARALLEL=1
 SEQUENCE_PARALLEL=1
 PPO_MINI_BATCH_SIZE=256
@@ -74,15 +64,12 @@ WORLD_SIZE=1
 
 NPROC_PER_NODE=8
 use_dynamic_bsz=True
-# /storage/openpsi/data/grounding_sft_v1_preprocessed/test_mixed.parquet
-#/storage/openpsi/data/amodal_data_preprocessed/val_amodal_v5.parquet
-#/storage/openpsi/data/amodal_data_preprocessed/train_amodal_v5.parquet 
-# ===== Submit the ray job =====
+
 ray job submit --address=${RAY_ADDRESS} \
     -- python3 -m verl.trainer.main_ppo \
     algorithm.adv_estimator=grpo \
-    data.train_files=/storage/openpsi/data/amodal_data_preprocessed/train_amodal_v5.parquet  \
-    data.val_files=/storage/openpsi/data/amodal_data_preprocessed/val_amodal_v5.parquet \
+    data.train_files=${DATA_DIR}/train_grounding.parquet \
+    data.val_files=${DATA_DIR}/val_grounding.parquet \
     data.train_batch_size=${ROLLOUT_BATCH_SIZE} \
     data.max_prompt_length=28672 \
     data.max_response_length=4096 \
@@ -93,12 +80,12 @@ ray job submit --address=${RAY_ADDRESS} \
     data.trust_remote_code=True \
     reward_model.enable=False \
     data.reward_fn_key=data_source \
-    custom_reward_function.path=/storage/openpsi/users/lichangye.lcy/VeRL_InternVL/verl/utils/reward_score/grounding.py \
+    custom_reward_function.path=./verl/utils/reward_score/grounding.py \
     custom_reward_function.name=compute_score \
     +custom_reward_function.reward_kwargs.reward_type=mix \
     +custom_reward_function.reward_kwargs.alpha=0.5 \
     +custom_reward_function.reward_kwargs.threshold=0.5 \
-    actor_rollout_ref.model.path=/storage/openpsi/models/amodal_model/amodal_2b_v15 \
+    actor_rollout_ref.model.path=${MODEL_PATH} \
     actor_rollout_ref.model.trust_remote_code=True \
     actor_rollout_ref.actor.optim.lr=3e-6 \
     actor_rollout_ref.actor.optim.warmup_style=cosine \
@@ -123,7 +110,7 @@ ray job submit --address=${RAY_ADDRESS} \
     actor_rollout_ref.rollout.log_prob_use_dynamic_bsz=${use_dynamic_bsz} \
     actor_rollout_ref.rollout.tensor_model_parallel_size=${TENSOR_PARALLEL} \
     actor_rollout_ref.rollout.name=vllm \
-    actor_rollout_ref.rollout.temperature=0.9 \
+    actor_rollout_ref.rollout.temperature=1.0 \
     actor_rollout_ref.rollout.top_p=0.9 \
     actor_rollout_ref.rollout.gpu_memory_utilization=0.8 \
     actor_rollout_ref.rollout.enable_chunked_prefill=False \
@@ -146,11 +133,8 @@ ray job submit --address=${RAY_ADDRESS} \
     trainer.n_gpus_per_node=${NPROC_PER_NODE} \
     trainer.nnodes=${WORLD_SIZE} \
     trainer.save_freq=10 \
-    trainer.test_freq=5 \
+    trainer.test_freq=10 \
     trainer.val_before_train=True \
     trainer.resume_mode=auto \
     trainer.rollout_data_dir=${OUTPUT_PATH}/rollouts \
     trainer.total_epochs=5 2>&1 | tee ${JOBLOG}
-
-  # trainer.resume_mode=resume_path \
-  # trainer.resume_from_path=/storage/openpsi/models/internvl3_8b_grounding_rl/trial1_cot_v3/global_step_100 \
