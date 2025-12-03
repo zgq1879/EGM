@@ -13,7 +13,7 @@ We provide the Grounding training and inference workflow for the **EGM-4B** and 
 ### 1. Installation
 
 ```bash
-git clone https://github.com/antoinegg1/EGM.git
+git clone https://github.com/zgq1879/EGM.git
 cd verl
 pip install -e .[vllm]
 ```
