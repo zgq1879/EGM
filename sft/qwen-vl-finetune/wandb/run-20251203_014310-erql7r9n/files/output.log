@@ -1,0 +1,6 @@
+  0%|                                                                                                                                     | 0/2 [00:00<?, ?it/s]/lustre/fsw/portfolios/nvr/users/gzhan/miniconda3/envs/qwen/lib/python3.9/site-packages/torch/utils/checkpoint.py:87: UserWarning: None of the inputs have requires_grad=True. Gradients will be None
+  warnings.warn(
+100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [01:00<00:00, 30.29s/it]
+{'loss': 1.6482, 'grad_norm': 30.019568400745715, 'learning_rate': 0.0, 'epoch': 0.5}
+{'loss': 1.6347, 'grad_norm': 30.61444275884086, 'learning_rate': 1e-05, 'epoch': 1.0}
+{'train_runtime': 62.773, 'train_samples_per_second': 2.278, 'train_steps_per_second': 0.032, 'train_loss': 1.6414483785629272, 'epoch': 1.0}
