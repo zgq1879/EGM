@@ -1,6 +1,6 @@
 ## Bigger or Longer? Test-Time-Scaling is More Efficient than Model-Size-Scaling for Visual Grounding
 
-This repository releases the official implementation of **## Bigger or Longer? Test-Time-Scaling is More Efficient than Model-Size-Scaling for Visual Grounding**. Our approach enables a 4B/8B parameter model to surpass the accuracy and efficiency of a 235B model on RefCOCO benchmarks. The training framework is built upon [Qwen3VL](https://github.com/QwenLM/Qwen3-VL), [InternVL](https://github.com/OpenGVLab/InternVL), [verl](https://github.com/volcengine/verl) and [verl-internvl](https://github.com/Weiyun1025/verl-internvl).
+This repository releases the official implementation of **Bigger or Longer? Test-Time-Scaling is More Efficient than Model-Size-Scaling for Visual Grounding**. Our approach enables a 4B/8B parameter model to surpass the accuracy and efficiency of a 235B model on RefCOCO benchmarks. The training framework is built upon [Qwen3VL](https://github.com/QwenLM/Qwen3-VL), [InternVL](https://github.com/OpenGVLab/InternVL), [verl](https://github.com/volcengine/verl) and [verl-internvl](https://github.com/Weiyun1025/verl-internvl).
 
 ## SFT Training
 
