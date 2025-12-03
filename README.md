@@ -1,10 +1,14 @@
 # EGM: Efficient Grounding Model
 
-This repository releases the official implementation of **EGM** (Efficient Grounding Model). Our approach enables an 8B parameter model to surpass the reasoning performance and efficiency of a 235B model on RefCOCO benchmarks. The training framework is built upon [verl](https://github.com/volcengine/verl) and [verl-internvl](https://github.com/Weiyun1025/verl-internvl).
+This repository releases the official implementation of **EGM** (Efficient Grounding Model). Our approach enables a 4B/8B parameter model to surpass the accuracy and efficiency of a 235B model on RefCOCO benchmarks. The training framework is built upon [Qwen3VL](https://github.com/QwenLM/Qwen3-VL), [InternVL](https://github.com/OpenGVLab/InternVL), [verl](https://github.com/volcengine/verl) and [verl-internvl](https://github.com/Weiyun1025/verl-internvl).
 
-## Example Usage
+## SFT Training
 
-As the InternVL and Qwen model series require different training environments, we provide the Grounding training workflow for the **Qwen3-VL-8B** model as the primary example below.
+Please refer to `sft/README.md` for SFT training.
+
+## RL Training
+
+We provide the Grounding training and inference workflow for the **EGM-4B** and **EGM-8B** model as the primary example below.
 
 ### 1. Installation
 
@@ -18,12 +22,19 @@ pip install -e .[vllm]
 
 | Training Phase | Model | HuggingFace |
 | :--- | :--- | :--- |
-| Supervised Fine-Tuning (SFT) | EGM-Qwen3-VL-8B-SFT | [Link] |
-| Reinforcement Learning | EGM-Qwen3-VL-8B-v1 | [Link] |
+| Supervised Fine-Tuning (SFT) | EGM-Qwen3-VL-4B-SFT | [Link](https://huggingface.co/JamesZGQ/EGM-4B-SFT) |
+| Reinforcement Learning | EGM-Qwen3-VL-4B-v1 | [Link](https://huggingface.co/JamesZGQ/EGM-4B) |
+| Supervised Fine-Tuning (SFT) | EGM-Qwen3-VL-8B-SFT | [Link](https://huggingface.co/JamesZGQ/EGM-8B-SFT) |
+| Reinforcement Learning | EGM-Qwen3-VL-8B-v1 | [Link](https://huggingface.co/JamesZGQ/EGM-8B) |
 
 ### 3. Data Preparation
 
-Please download the training and testing datasets from [Link] before proceeding.
+Please download the training and testing datasets before proceeding.
+
+[Training annotations](https://huggingface.co/datasets/JamesZGQ/EGM_Datasets/tree/main/train_data) |
+[Testing annotations](https://huggingface.co/datasets/JamesZGQ/EGM_Datasets/tree/main/eval_data) |
+[Images tar1](https://huggingface.co/datasets/JamesZGQ/EGM_Datasets/blob/main/coco.tar) |
+[Images tar2](https://huggingface.co/datasets/JamesZGQ/EGM_Datasets/blob/main/coco_flip.tar)
 
 ```bash
 # Set your environment variables
@@ -53,7 +64,7 @@ export MODEL_PATH=${YOUR_MODEL_PATH}
 bash scripts/grounding_qwen.sh
 ```
 
-### 5. Evaluation
+## Inference and Evaluation
 
 To evaluate the model, use the command provided below.
 
