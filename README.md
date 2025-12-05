@@ -14,8 +14,12 @@ We provide the Grounding training and inference workflow for the **EGM-4B** and 
 
 ```bash
 git clone https://github.com/zgq1879/EGM.git
+conda create -n EGM python=3.12
+conda activate EGM
+
 cd verl
 pip install -e .[vllm]
+pip install "pyzmq==26.4.0"
 ```
 
 ### 2. Model 
