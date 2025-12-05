@@ -19,5 +19,5 @@ python examples/data_preprocess/grounding_val.py \
   --input_dir "${VAL_DIR}" \
   --output_dir "${OUTPUT_DIR}" \
   --test_files "${VALID_FILES[@]}" \
-  --format default \
+  --format qwen \
   --num_workers 64

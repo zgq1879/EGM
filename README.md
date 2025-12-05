@@ -38,9 +38,9 @@ Please download the training and testing datasets before proceeding.
 
 ```bash
 # Set your environment variables
-export BASE_IMAGE_PATH=${YOUR_BASE_IMG_PATH}
-export OUTPUT_DIR_PATH=${YOUR_DATA_DIR}
-export VAL_DIR_PATH=${VAL_DIR_PATH}
+export BASE_IMG_PATH=${YOUR_BASE_IMG_PATH}
+export OUTPUT_DIR=${YOUR_DATA_DIR}
+export VAL_DIR=${YOUR_VAL_DIR}
 export TRAIN_JSON=${QWEN3_8B_GROUNDING_TRAIN_JSON}
 
 # Run preprocessing scripts
@@ -50,7 +50,7 @@ bash examples/data_preprocess/grounding_all.sh
 
 ### 4. Training
 
-Reinforcement Learning  is conducted based on the SFT checkpoint. The default configuration utilizes 8 GPUs. You may customize the distributed training settings via the `trainer.nnodes` and `trainer.n_gpus_per_node` arguments.
+Reinforcement Learning  is conducted based on the SFT checkpoint. The default configuration utilizes 8 GPUs. You may customize the distributed training settings via the `trainer.nnodes` and `trainer.n_gpus_per_node` arguments. The data directory `(DATA_DIR)` should be the same as output directory `(OUTPUT_DIR)` in Data Preparation.
 
 ```bash
 export WANDB_BASE_URL=${YOUR_WANDB_BASE_URL}   
@@ -64,9 +64,10 @@ export MODEL_PATH=${YOUR_MODEL_PATH}
 bash scripts/grounding_qwen.sh
 ```
 
-## Inference and Evaluation
+### 5. Inference and Evaluation
 
-To evaluate the model, use the command provided below.
+
+To evaluate the model, update sglang with `pip install sglang==0.5.5.post3` and use the command provided below.
 
 **Note:** The RefCOCO benchmark consists of eight distinct JSON files. Consequently, you must run the evaluation script sequentially for each of the 8 files to obtain the complete benchmark results.
 
@@ -74,9 +75,25 @@ To evaluate the model, use the command provided below.
 export MODEL_PATH=${YOUR_MODEL_PATH}
 export DATA_JSON=${DATA_JSON}
 export OUTPUT_DIR=${YOUR_OUTPUT_DIR}
+export BASE_IMG_PATH=${YOUR_BASE_IMG_PATH}
+
+bash scripts/sglang_infer.sh
+```
+
+We also support evaluation with vLLM, update vLLM with `pip install vllm==0.11.0` and use the command provided below:
+
+```bash
+export MODEL_PATH=${YOUR_MODEL_PATH}
+export DATA_JSON=${DATA_JSON}
+export OUTPUT_DIR=${YOUR_OUTPUT_DIR}
+export BASE_IMG_PATH=${YOUR_BASE_IMG_PATH}
 
 bash scripts/vllm_infer.sh
 ```
+
+### 6. Handling Environment Issues
+
+1. If you encounter runtime errors related to FlashInfer, such as `GLIBC_2.32' not found (required by .../flashinfer/.../sampling.so)`, you can work around this by disabling the FlashInfer sampler: set the environment variable `VLLM_USE_FLASHINFER_SAMPLER=0` or `SGLANG_IS_FLASHINFER_AVAILABLE=false` before launching the training or inference command.
 
 ---
 
