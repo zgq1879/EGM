@@ -13,13 +13,21 @@ We provide the Grounding training and inference workflow for the **EGM-4B** and 
 ### 1. Installation
 
 ```bash
-git clone https://github.com/zgq1879/EGM.git
-conda create -n EGM python=3.12
-conda activate EGM
-
-cd verl
+cd qwen3vl_rl
+conda create -n verl_egm -y -c nvidia/label/cuda-12.8.0 -c nvidia -c conda-forge python=3.12 cuda-toolkit=12.8
+conda activate verl_egm
+pip install torch==2.8.0 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128
+pip install "sglang[all]==0.5.2" --no-cache-dir && pip install torch-memory-saver --no-cache-dir
+pip install "transformers[hf_xet]>=4.51.0" accelerate datasets peft hf-transfer \
+    "numpy<2.0.0" "pyarrow>=15.0.0" pandas "tensordict>=0.8.0,<=0.10.0,!=0.9.0" torchdata \
+    ray[default] codetiming hydra-core pylatexenc qwen-vl-utils wandb dill pybind11 liger-kernel mathruler \
+    pytest py-spy pre-commit ruff tensorboard 
+pip install "nvidia-ml-py>=12.560.30" "fastapi[standard]>=0.115.0" "optree>=0.13.0" "pydantic>=2.9" "grpcio>=1.62.1"
+wget https://github.com/Efficient-Large-Model/flash-attention-builder/releases/download/v2.8.3/flash_attn-2.8.3+cu12torch2.8cxx11abiFALSE-cp312-cp312-linux_x86_64.whl 
+pip install --no-cache-dir flash_attn-2.8.3+cu12torch2.8cxx11abiFALSE-cp312-cp312-linux_x86_64.whl
+pip install --no-cache-dir flashinfer-python==0.3.1
 pip install -e .[vllm]
-pip install "pyzmq==26.4.0"
+pip uninstall decord
 ```
 
 ### 2. Model 
