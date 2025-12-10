@@ -157,6 +157,7 @@ export MODEL_PATH=../models/EGM-8B-SFT
 export OUTPUT_DIR=../result/
 export DATA_DIR=../data/EGM_Datasets/processed_rl_data/
 
+cd verl
 bash scripts/grounding_qwen.sh
 ```
 
