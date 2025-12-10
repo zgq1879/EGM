@@ -1,6 +1,44 @@
+<h1 align="center">Bigger or Longer? Test-Time-Scaling is More Efficient<br> than Model-Size-Scaling for Visual Grounding  </h1>
+
+
+This repository releases the official implementation of Bigger or Longer?Test-Time-Scaling is More Efficient than Model-Size-Scaling for Visual Grounding. 
+
+这里差一个文章地址
+
+## Abstract
+
+Visual grounding is an essential capability of Visual Language Models (VLMs) to understand the real physical world. Previous state-of-the-art grounding visual language models tend to go bigger (scale the model size), which makes them very heavy for deployment and slow for inference, making it difficult to apply to edge systems to obtain grounding results in real time. However, we notice that the sizes of visual encoders are the same and they only scale the language parts. Small VLMs fall behind larger VLMs in grounding because of the difference in language understanding capability rather than visual information handling, and we thoroughly verify it. To mitigate the gap, we introduce *EGM*: a method to scale the test-time computation (*#generated tokens*) rather than the model sizes. Going longer is not only deployment-friendly, but also yields better end-to-end latency as the cost of each token is much cheaper. On the RefCOCO benchmark, our **EGM-8B** demonstrates **91.4 IoU** with average 737ms (**5.9$\times$ faster**) latency while **Qwen3-VL-235B** demands 4,320ms to achieve **90.5 IoU**. To validate our approach's generality, we further set up a new amodal grounding setting that requires the model to predict both the visible and occluded parts of the objects. Experiments show our method can consistently and significantly improve the vanilla grounding and amodal grounding capabilities of small models to be on par with or outperform the larger models, thereby improving the efficiency for visual grounding. 
+
+See our website for more details : https://zgq1879.github.io/EGM_website/
+
+### Table of Contents  <!-- omit in toc -->
+
+  - [Bigger or Longer? Test-Time-Scaling is More Efficient than Model-Size-Scaling for Visual Grounding](#bigger-or-longer-test-time-scaling-is-more-efficient-than-model-size-scaling-for-visual-grounding-1)
+  - [SFT Training](#sft-training)
+  - [RL Training](#rl-training)
+  - [Evaluation](#evaluation)
+  - [Acknowledgment](#acknowledgment)
+
 ## Bigger or Longer? Test-Time-Scaling is More Efficient than Model-Size-Scaling for Visual Grounding
 
-This repository releases the official implementation of **Bigger or Longer? Test-Time-Scaling is More Efficient than Model-Size-Scaling for Visual Grounding**. Our approach enables a 4B/8B parameter model to surpass the accuracy and efficiency of a 235B model on RefCOCO benchmarks. 
+### Motivation of the EGM method
+
+Conventional VLMs **"Go Bigger"** (Left) by scaling up model size, which hinders deployment and latency. In contrast, our EGM **"Go Longer"** (Right) scales test-time inference instead; by outputting more tokens with a smaller model to bridge the understanding gap, we achieve on-par performance with significantly better efficiency.
+
+
+<div align="center">
+  <img src="images/teaser.png" width="90%"/>
+</div>
+
+### Performance of the EGM method
+
+Our **EGM** models (2B/4B/8B) demonstrate superior scaling efficiency compared to simply increasing model size ("Bigger"). Notably, **EGM-8B** outperforms the massive Qwen3-VL-235B-Instruct ('-I') and Thinking ('-T') models in accuracy, while respectively achieving significant **5.9×** and **18.9×** speedups in latency.
+
+<div align="center">
+  <img src="images/tradeoff.png" width="90%"/>
+</div>
+
+
 
 ## SFT Training
 
@@ -106,6 +144,8 @@ bash scripts/vllm_infer.sh
 ### 6. Handling Environment Issues
 
 1. If you encounter runtime errors related to FlashInfer, such as `GLIBC_2.32' not found (required by .../flashinfer/.../sampling.so)`, you can work around this by disabling the FlashInfer sampler: set the environment variable `VLLM_USE_FLASHINFER_SAMPLER=0` or `SGLANG_IS_FLASHINFER_AVAILABLE=false` before launching the training or inference command.
+
+## Evaluation
 
 ## Acknowledgment
 
