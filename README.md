@@ -84,6 +84,8 @@ cd sft/qwen-vl-finetune
 bash scripts/sft_qwen3_8b_grounding.sh
 ```
 
+For more details on SFT data construction and training other models, please refer to `sft/README.md`
+
 ## RL Training
 
 We provide the Grounding training and inference workflow for the **EGM-8B** model as the primary example below.
