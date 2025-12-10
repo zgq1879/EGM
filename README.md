@@ -41,7 +41,8 @@ Our **EGM** models (2B/4B/8B) demonstrate superior scaling efficiency compared t
 
 ## Dataset and Models
 
-您可以从huggingface下载我们的数据集和模型
+You can download our datasets and models from HuggingFace using the commands below:
+
 ```bash
 pip install -U huggingface_hub
 hf download JamesZGQ/EGM_Datasets --local-dir ./data/EGM_Datasets
@@ -52,7 +53,7 @@ hf download Qwen/Qwen3-VL-8B-Thinking --local-dir ./models/Qwen3-VL-8B-Thinking
 hf download JamesZGQ/EGM-8B-SFT --local-dir ./models/EGM-8B-SFT
 ```
 
-如果您希望之间使用我们训练完成的EGM-Qwen3-VL-8B-SFT模型来develop，你可以使用以下指令下载，并参考[RL Training](#rl-training)进行训练
+If you wish to directly use our pre-trained EGM-Qwen3-VL-8B-SFT model for development, use the following command to download it. Afterward, please refer to the [RL Training](#rl-training) section for training instructions.
 
 **Note**: If you are prohibited from the internet, please try to use the HF Mirror:
 
