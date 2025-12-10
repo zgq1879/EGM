@@ -1,6 +1,6 @@
 ## Bigger or Longer? Test-Time-Scaling is More Efficient than Model-Size-Scaling for Visual Grounding
 
-This repository releases the official implementation of **Bigger or Longer? Test-Time-Scaling is More Efficient than Model-Size-Scaling for Visual Grounding**. Our approach enables a 4B/8B parameter model to surpass the accuracy and efficiency of a 235B model on RefCOCO benchmarks. The training framework is built upon [Qwen3VL](https://github.com/QwenLM/Qwen3-VL), [InternVL](https://github.com/OpenGVLab/InternVL), [verl](https://github.com/volcengine/verl) and [verl-internvl](https://github.com/Weiyun1025/verl-internvl).
+This repository releases the official implementation of **Bigger or Longer? Test-Time-Scaling is More Efficient than Model-Size-Scaling for Visual Grounding**. Our approach enables a 4B/8B parameter model to surpass the accuracy and efficiency of a 235B model on RefCOCO benchmarks. The training framework is built upon .
 
 ## SFT Training
 
@@ -106,6 +106,12 @@ bash scripts/vllm_infer.sh
 ### 6. Handling Environment Issues
 
 1. If you encounter runtime errors related to FlashInfer, such as `GLIBC_2.32' not found (required by .../flashinfer/.../sampling.so)`, you can work around this by disabling the FlashInfer sampler: set the environment variable `VLLM_USE_FLASHINFER_SAMPLER=0` or `SGLANG_IS_FLASHINFER_AVAILABLE=false` before launching the training or inference command.
+
+## Acknowledgment
+
+This repository benefits from [Qwen3VL](https://github.com/QwenLM/Qwen3-VL), [InternVL](https://github.com/OpenGVLab/InternVL), [verl](https://github.com/volcengine/verl) and [verl-internvl](https://github.com/Weiyun1025/verl-internvl).
+
+Thanks for their wonderful works and their efforts to further promote LLM research.
 
 ---
 
