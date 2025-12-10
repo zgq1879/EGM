@@ -14,6 +14,7 @@ See our website for more details : https://zgq1879.github.io/EGM_website/
 ### Table of Contents  <!-- omit in toc -->
 
   - [Bigger or Longer? Test-Time-Scaling is More Efficient than Model-Size-Scaling for Visual Grounding](#bigger-or-longer-test-time-scaling-is-more-efficient-than-model-size-scaling-for-visual-grounding-1)
+  - [Dataset and Models](#dataset-and-models)
   - [SFT Training](#sft-training)
   - [RL Training](#rl-training)
   - [Evaluation](#evaluation)
@@ -38,11 +39,50 @@ Our **EGM** models (2B/4B/8B) demonstrate superior scaling efficiency compared t
   <img src="images/tradeoff.png" width="90%"/>
 </div>
 
+## Dataset and Models
 
+您可以从huggingface下载我们的数据集和模型
+```bash
+pip install -U huggingface_hub
+hf download JamesZGQ/EGM_Datasets --local-dir ./data/EGM_Datasets
+hf download Qwen/Qwen3-VL-8B-Thinking --local-dir ./models/Qwen3-VL-8B-Thinking
+```
+
+```bash
+hf download JamesZGQ/EGM-8B-SFT --local-dir ./models/EGM-8B-SFT
+```
+
+如果您希望之间使用我们训练完成的EGM-Qwen3-VL-8B-SFT模型来develop，你可以使用以下指令下载，并参考[RL Training](#rl-training)进行训练
+
+**Note**: If you are prohibited from the internet, please try to use the HF Mirror:
+
+```bash
+export HF_ENDPOINT=https://hf-mirror.com
+```
+
+## Installation
+
+```bash
+git clone https://github.com/zgq1879/EGM.git
+```
 
 ## SFT Training
 
-Please refer to `sft/README.md` for SFT training.
+Run the following commands to create the environment for SFT training:
+```bash
+conda create -n EGM-sft -y -c nvidia/label/cuda-12.4.0 -c nvidia -c conda-forge python=3.9 cuda-toolkit=12.4
+conda activate EGM-sft
+pip install -r sft/requirement_sft.txt
+```
+
+To train the EGM-Qwen3-VL-8B-SFT model, execute the following commands:
+```bash
+export REFCOCO_ANNOTATION_PATH=/data/grounding/refcoco_train.json
+export REFCOCO_DATA_PATH=/data/images/refcoco
+export OUTPUT_DIR=./models/EGM-8B-SFT
+cd sft/qwen-vl-finetune
+bash scripts/sft_qwen3_8b_grounding.sh
+```
 
 ## RL Training
 
