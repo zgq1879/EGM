@@ -1,6 +1,6 @@
 ## Bigger or Longer? Test-Time-Scaling is More Efficient than Model-Size-Scaling for Visual Grounding
 
-This repository releases the official implementation of **Bigger or Longer? Test-Time-Scaling is More Efficient than Model-Size-Scaling for Visual Grounding**. Our approach enables a 4B/8B parameter model to surpass the accuracy and efficiency of a 235B model on RefCOCO benchmarks. The training framework is built upon .
+This repository releases the official implementation of **Bigger or Longer? Test-Time-Scaling is More Efficient than Model-Size-Scaling for Visual Grounding**. Our approach enables a 4B/8B parameter model to surpass the accuracy and efficiency of a 235B model on RefCOCO benchmarks. 
 
 ## SFT Training
 
@@ -8,7 +8,7 @@ Please refer to `sft/README.md` for SFT training.
 
 ## RL Training
 
-We provide the Grounding training and inference workflow for the **EGM-4B** and **EGM-8B** model as the primary example below.
+We provide the Grounding training and inference workflow for the **EGM-8B** model as the primary example below.
 
 ### 1. Installation
 
