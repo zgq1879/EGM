@@ -45,15 +45,28 @@ You can download our datasets and models from HuggingFace using the commands bel
 
 ```bash
 pip install -U huggingface_hub
-hf download JamesZGQ/EGM_Datasets --local-dir ./data/EGM_Datasets
 hf download Qwen/Qwen3-VL-8B-Thinking --local-dir ./models/Qwen3-VL-8B-Thinking
+hf download JamesZGQ/EGM_Datasets --local-dir ./data/EGM_Datasets
+cat ./data/coco.tar.part_* > ./data/coco.tar
+tar -xvf ./data/coco.tar ./data/
+tar -xvf ./data/coco_flip.tar ./data/
 ```
+
+If you wish to directly use our pre-trained EGM-Qwen3-VL-8B-SFT model for development, use the following command to download it. Afterward, please refer to the [RL Training](#rl-training) section for training instructions.
 
 ```bash
 hf download JamesZGQ/EGM-8B-SFT --local-dir ./models/EGM-8B-SFT
 ```
 
-If you wish to directly use our pre-trained EGM-Qwen3-VL-8B-SFT model for development, use the following command to download it. Afterward, please refer to the [RL Training](#rl-training) section for training instructions.
+
+We provide the SFT and RL model checkpoints for both EGM-Qwen3-VL-4B and EGM-Qwen3-VL-8B, as listed below:
+
+| Training Phase | Model |
+| :--- | :--- | 
+| Supervised Fine-Tuning (SFT) | [EGM-Qwen3-VL-4B-SFT](https://huggingface.co/JamesZGQ/EGM-4B-SFT) |
+| Reinforcement Learning | [EGM-Qwen3-VL-4B-v1](https://huggingface.co/JamesZGQ/EGM-4B) | 
+| Supervised Fine-Tuning (SFT) | [EGM-Qwen3-VL-8B-SFT](https://huggingface.co/JamesZGQ/EGM-8B-SFT) | 
+| Reinforcement Learning | [EGM-Qwen3-VL-8B-v1](https://huggingface.co/JamesZGQ/EGM-8B)  | 
 
 **Note**: If you are prohibited from the internet, please try to use the HF Mirror:
 
@@ -61,31 +74,29 @@ If you wish to directly use our pre-trained EGM-Qwen3-VL-8B-SFT model for develo
 export HF_ENDPOINT=https://hf-mirror.com
 ```
 
-## Installation
-
-```bash
-git clone https://github.com/zgq1879/EGM.git
-```
-
 ## SFT Training
 
 Run the following commands to create the environment for SFT training:
+
 ```bash
+git clone https://github.com/zgq1879/EGM.git
+cd EGM
 conda create -n EGM-sft -y -c nvidia/label/cuda-12.4.0 -c nvidia -c conda-forge python=3.9 cuda-toolkit=12.4
 conda activate EGM-sft
 pip install -r sft/requirement_sft.txt
 ```
 
 To train the EGM-Qwen3-VL-8B-SFT model, execute the following commands:
+
 ```bash
-export REFCOCO_ANNOTATION_PATH=/data/grounding/refcoco_train.json
+export REFCOCO_ANNOTATION_PATH=../data/EGM_Datasets/vanilla_grounding_reasoning_training_dataset_cot_subset.jsonl
 export REFCOCO_DATA_PATH=/data/images/refcoco
-export OUTPUT_DIR=./models/EGM-8B-SFT
+export OUTPUT_DIR=../models/EGM-8B-SFT
 cd sft/qwen-vl-finetune
 bash scripts/sft_qwen3_8b_grounding.sh
 ```
 
-For more details on SFT data construction and training other models, please refer to `sft/README.md`
+We have provided a 1k subset `vanilla_grounding_reasoning_training_dataset_cot_subset.jsonl` here solely as an example for SFT. For further details on full SFT data construction and training other models, please refer to`sft/README.md`.
 
 ## RL Training
 
@@ -94,33 +105,17 @@ We provide the Grounding training and inference workflow for the **EGM-8B** mode
 ### 1. Installation
 
 ```bash
-cd qwen3vl_rl
-conda create -n verl_egm -y -c nvidia/label/cuda-12.8.0 -c nvidia -c conda-forge python=3.12 cuda-toolkit=12.8
-conda activate verl_egm
-pip install torch==2.8.0 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128
-pip install "sglang[all]==0.5.2" --no-cache-dir && pip install torch-memory-saver --no-cache-dir
-pip install "transformers[hf_xet]>=4.51.0" accelerate datasets peft hf-transfer \
-    "numpy<2.0.0" "pyarrow>=15.0.0" pandas "tensordict>=0.8.0,<=0.10.0,!=0.9.0" torchdata \
-    ray[default] codetiming hydra-core pylatexenc qwen-vl-utils wandb dill pybind11 liger-kernel mathruler \
-    pytest py-spy pre-commit ruff tensorboard 
-pip install "nvidia-ml-py>=12.560.30" "fastapi[standard]>=0.115.0" "optree>=0.13.0" "pydantic>=2.9" "grpcio>=1.62.1"
-wget https://github.com/Efficient-Large-Model/flash-attention-builder/releases/download/v2.8.3/flash_attn-2.8.3+cu12torch2.8cxx11abiFALSE-cp312-cp312-linux_x86_64.whl 
-pip install --no-cache-dir flash_attn-2.8.3+cu12torch2.8cxx11abiFALSE-cp312-cp312-linux_x86_64.whl
-pip install --no-cache-dir flashinfer-python==0.3.1
-pip install -e .[vllm]
-pip uninstall decord
+git clone https://github.com/zgq1879/EGM.git
+cd EGM
+conda create -n EGM-rl python=3.11.13
+conda activate EGM-rl
+pip install -r requirement.txt
 ```
+<!-- 安装部分有两个问题需要check，一个是我们这边的机器只能用docker启动，启动以后没有办法安装cuda配置，所以我后面使用了一个pytorch/pytorch:2.8.0-cuda12.9-cudnn9-devel作为基础镜像测试，因此最理想的情况下是有一台公开的conda机器可以重新测试一下
+此外我这边连接不了外网因此flash-attn也需要测试一下https://github.com/Dao-AILab/flash-attention/releases/download/v2.8.3/flash_attn-2.8.3+cu12torch2.8cxx11abiFALSE-cp311-cp311-linux_x86_64.whl能不能正常安装 -->
 
-### 2. Model 
 
-| Training Phase | Model | HuggingFace |
-| :--- | :--- | :--- |
-| Supervised Fine-Tuning (SFT) | EGM-Qwen3-VL-4B-SFT | [Link](https://huggingface.co/JamesZGQ/EGM-4B-SFT) |
-| Reinforcement Learning | EGM-Qwen3-VL-4B-v1 | [Link](https://huggingface.co/JamesZGQ/EGM-4B) |
-| Supervised Fine-Tuning (SFT) | EGM-Qwen3-VL-8B-SFT | [Link](https://huggingface.co/JamesZGQ/EGM-8B-SFT) |
-| Reinforcement Learning | EGM-Qwen3-VL-8B-v1 | [Link](https://huggingface.co/JamesZGQ/EGM-8B) |
-
-### 3. Data Preparation
+<!-- ### 3. Data Preparation
 
 Please download the training and testing datasets before proceeding.
 
@@ -139,28 +134,39 @@ export TRAIN_JSON=${QWEN3_8B_GROUNDING_TRAIN_JSON}
 # Run preprocessing scripts
 bash examples/data_preprocess/grounding_val.sh
 bash examples/data_preprocess/grounding_all.sh
-```
+``` -->
+
+
 
 ### 4. Training
 
-Reinforcement Learning  is conducted based on the SFT checkpoint. The default configuration utilizes 8 GPUs. You may customize the distributed training settings via the `trainer.nnodes` and `trainer.n_gpus_per_node` arguments. The data directory `(DATA_DIR)` should be the same as output directory `(OUTPUT_DIR)` in Data Preparation.
+Reinforcement Learning is conducted based on the SFT checkpoint. The default configuration utilizes 8 GPUs. You may customize the distributed training settings via the `trainer.nnodes` and `trainer.n_gpus_per_node` arguments. 
+
+We provide the necessary training and validation sets in Parquet format for EGM-Qwen3-VL-8B-v1. Alternatively, you may construct the datasets manually using `verl/examples/data_preprocess/grounding_all.sh` and`verl/examples/data_preprocess/grounding_val.sh`.
+
+
+To initiate training, execute the script below from within the `/EGM` directory:
 
 ```bash
+
+# Configure Weights & Biases (W&B) for experiment tracking
 export WANDB_BASE_URL=${YOUR_WANDB_BASE_URL}   
 export WANDB_API_KEY=${YOUR_WANDB_API_KEY} 
-export DATA_DIR=${YOUR_DATA_DIR}
-export PROJECT_NAME=${YOUR_PROJECT_NAME}
-export TASK_NAME=${YOUR_TASK_NAME}
-export OUTPUT_DIR=${YOUR_OUTPUT_DIR}
-export MODEL_PATH=${YOUR_MODEL_PATH}
+
+export MODEL_PATH=../models/EGM-8B-SFT
+export OUTPUT_DIR=../result/
+export DATA_DIR=../data/EGM_Datasets/processed_rl_data/
 
 bash scripts/grounding_qwen.sh
 ```
 
-### 5. Inference and Evaluation
+<!-- ### 6. Handling Environment Issues
 
+1. If you encounter runtime errors related to FlashInfer, such as `GLIBC_2.32' not found (required by .../flashinfer/.../sampling.so)`, you can work around this by disabling the FlashInfer sampler: set the environment variable `VLLM_USE_FLASHINFER_SAMPLER=0` or `SGLANG_IS_FLASHINFER_AVAILABLE=false` before launching the training or inference command. -->
 
-To evaluate the model, update sglang with `pip install sglang==0.5.5.post3` and use the command provided below.
+## Evaluation
+
+To evaluate the model, update sglang with `pip install sglang==0.5.6` and use the command provided below.
 
 **Note:** The RefCOCO benchmark consists of eight distinct JSON files. Consequently, you must run the evaluation script sequentially for each of the 8 files to obtain the complete benchmark results.
 
@@ -173,7 +179,7 @@ export BASE_IMG_PATH=${YOUR_BASE_IMG_PATH}
 bash scripts/sglang_infer.sh
 ```
 
-We also support evaluation with vLLM, update vLLM with `pip install vllm==0.11.0` and use the command provided below:
+We also support evaluation with vLLM:
 
 ```bash
 export MODEL_PATH=${YOUR_MODEL_PATH}
@@ -183,12 +189,6 @@ export BASE_IMG_PATH=${YOUR_BASE_IMG_PATH}
 
 bash scripts/vllm_infer.sh
 ```
-
-### 6. Handling Environment Issues
-
-1. If you encounter runtime errors related to FlashInfer, such as `GLIBC_2.32' not found (required by .../flashinfer/.../sampling.so)`, you can work around this by disabling the FlashInfer sampler: set the environment variable `VLLM_USE_FLASHINFER_SAMPLER=0` or `SGLANG_IS_FLASHINFER_AVAILABLE=false` before launching the training or inference command.
-
-## Evaluation
 
 ## Acknowledgment
 
