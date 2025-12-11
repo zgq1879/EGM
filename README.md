@@ -60,6 +60,7 @@ tar -xvf ./data/coco.tar ./data/
 tar -xvf ./data/coco_flip.tar ./data/
 ```
 
+
 If you wish to directly use our pre-trained EGM-Qwen3-VL-8B-SFT model for development, use the following command to download it. Afterward, please refer to the [RL Training](#rl-training) section for training instructions.
 
 ```bash
@@ -143,7 +144,20 @@ bash examples/data_preprocess/grounding_all.sh
 
 Reinforcement Learning is conducted based on the SFT checkpoint. The default configuration utilizes 8 GPUs. You may customize the distributed training settings via the `trainer.nnodes` and `trainer.n_gpus_per_node` arguments. 
 
-We provide the necessary training and validation sets in Parquet format for EGM-Qwen3-VL-8B-v1. Alternatively, you may construct the datasets manually using `verl/examples/data_preprocess/grounding_all.sh` and`verl/examples/data_preprocess/grounding_val.sh`.
+We provide the necessary training and validation sets in Parquet format for EGM-Qwen3-VL-8B-v1. Please use the following code to replace the relative image paths within the Parquet files:
+
+```bash
+export BASE_DIR=$(pwd)
+python EGM/verl/scripts/replace_img_dir.py \
+  --parquet_path ./data/EGM_Datasets/processed_rl_data/train_grounding.parquet  \
+  --base_img_root ${BASE_DIR}/data/
+python EGM/verl/scripts/replace_img_dir.py \
+  --parquet_path ./data/EGM_Datasets/processed_rl_data/val_grounding.parquet  \
+  --base_img_root ${BASE_DIR}/data/
+```
+
+
+Alternatively, you may construct the datasets manually using `verl/examples/data_preprocess/grounding_all.sh` and`verl/examples/data_preprocess/grounding_val.sh`.
 
 
 To initiate training, execute the script below from within the `/EGM` directory:
