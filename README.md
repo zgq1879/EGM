@@ -55,9 +55,9 @@ You can download our datasets and models from HuggingFace using the commands bel
 pip install -U huggingface_hub
 hf download Qwen/Qwen3-VL-8B-Thinking --local-dir ./models/Qwen3-VL-8B-Thinking
 hf download JamesZGQ/EGM_Datasets --local-dir ./data/EGM_Datasets
-cat ./data/coco.tar.part_* > ./data/coco.tar
-tar -xvf ./data/coco.tar ./data/
-tar -xvf ./data/coco_flip.tar ./data/
+cat ./data/EGM_Datasets/coco.tar.part_* > ./data/EGM_Datasets/coco.tar
+tar -xvf ./data/EGM_Datasets/coco.tar ./data/
+tar -xvf ./data/EGM_Datasets/coco_flip.tar ./data/
 ```
 
 If you wish to directly use our pre-trained EGM-Qwen3-VL-8B-SFT model for development, use the following command to download it. Afterward, please refer to the [RL Training](#rl-training) section for training instructions.
