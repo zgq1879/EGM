@@ -90,7 +90,7 @@ To train the EGM-Qwen3-VL-8B-SFT model, execute the following commands:
 ```bash
 export BASE_DIR=$(cd .. && pwd)
 export REFCOCO_ANNOTATION_PATH="${BASE_DIR}/data/EGM_Datasets/vanilla_grounding_reasoning_training_dataset_cot_subset.jsonl"
-export REFCOCO_DATA_PATH="${BASE_DIR}/data/images/refcoco"
+export REFCOCO_DATA_PATH="${BASE_DIR}/data/"
 export OUTPUT_DIR="${BASE_DIR}/models/EGM-8B-SFT"
 
 
