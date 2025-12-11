@@ -73,19 +73,21 @@ hf download JamesZGQ/EGM-8B-SFT --local-dir ./models/EGM-8B-SFT
 export HF_ENDPOINT=https://hf-mirror.com
 ```
 
-## SFT Training
+## Installation
 
-Run the following commands to create the environment for SFT training:
+Run the following commands to create the environment for training:
 
 ```bash
 git clone https://github.com/zgq1879/EGM.git
 cd EGM
-conda create -n EGM-sft -y -c nvidia/label/cuda-12.4.0 -c nvidia -c conda-forge python=3.9 cuda-toolkit=12.4
-conda activate EGM-sft
-pip install -r sft/requirement_sft.txt
+conda create -n EGM-rl python=3.11.13
+conda activate EGM-rl
+pip install -r requirement.txt
 ```
 
-To train the EGM-Qwen3-VL-8B-SFT model, execute the following commands:
+## SFT Training
+
+To train the EGM-Qwen3-VL-8B-SFT model, execute the following commands within the `/EGM` directory:
 
 ```bash
 export BASE_DIR=$(cd .. && pwd)
@@ -102,17 +104,8 @@ We have provided a 1k subset `vanilla_grounding_reasoning_training_dataset_cot_s
 
 ## RL Training
 
-We provide the Grounding training and inference workflow for the **EGM-8B** model as the primary example below.
+<!-- We provide the Grounding training and inference workflow for the **EGM-8B** model as the primary example below. -->
 
-### 1. Installation
-
-```bash
-git clone https://github.com/zgq1879/EGM.git
-cd EGM
-conda create -n EGM-rl python=3.11.13
-conda activate EGM-rl
-pip install -r requirement.txt
-```
 <!-- 安装部分有两个问题需要check，一个是我们这边的机器只能用docker启动，启动以后没有办法安装cuda配置，所以我后面使用了一个pytorch/pytorch:2.8.0-cuda12.9-cudnn9-devel作为基础镜像测试，因此最理想的情况下是有一台公开的conda机器可以重新测试一下
 此外我这边连接不了外网因此flash-attn也需要测试一下https://github.com/Dao-AILab/flash-attention/releases/download/v2.8.3/flash_attn-2.8.3+cu12torch2.8cxx11abiFALSE-cp311-cp311-linux_x86_64.whl能不能正常安装 -->
 
@@ -137,10 +130,6 @@ export TRAIN_JSON=${QWEN3_8B_GROUNDING_TRAIN_JSON}
 bash examples/data_preprocess/grounding_val.sh
 bash examples/data_preprocess/grounding_all.sh
 ``` -->
-
-
-
-### 4. Training
 
 Reinforcement Learning is conducted based on the SFT checkpoint. The default configuration utilizes 8 GPUs. You may customize the distributed training settings via the `trainer.nnodes` and `trainer.n_gpus_per_node` arguments. 
 

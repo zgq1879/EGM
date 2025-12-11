@@ -41,4 +41,5 @@ torchdata
 codetiming
 datasets
 qwen-vl-utils
+deepspeed==0.17.1
 https://github.com/Dao-AILab/flash-attention/releases/download/v2.8.3/flash_attn-2.8.3+cu12torch2.8cxx11abiFALSE-cp311-cp311-linux_x86_64.whl
