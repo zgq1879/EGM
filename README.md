@@ -80,8 +80,8 @@ Run the following commands to create the environment for training:
 ```bash
 git clone https://github.com/zgq1879/EGM.git
 cd EGM
-conda create -n EGM-rl python=3.11.13
-conda activate EGM-rl
+conda create -n EGM python=3.11.13
+conda activate EGM
 pip install -r requirement.txt
 ```
 
