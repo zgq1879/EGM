@@ -202,7 +202,9 @@ export MODEL_PATH="${BASE_DIR}/models/EGM-8B"
 export DATA_JSON="${BASE_DIR}/data/EGM_Datasets/metadata/eval/refcoco+_testA.jsonl"
 export OUTPUT_DIR="${BASE_DIR}/result/"
 export BASE_IMG_PATH="${BASE_DIR}/data/"
-bash EGM/verl/scripts/sglang_infer.sh
+
+cd EGM/verl/
+bash scripts/sglang_infer.sh
 ```
 
 We also support evaluation with vLLM:
@@ -214,7 +216,8 @@ export DATA_JSON="${BASE_DIR}/data/EGM_Datasets/metadata/eval/refcoco+_testA.jso
 export OUTPUT_DIR="${BASE_DIR}/result/"
 export BASE_IMG_PATH="${BASE_DIR}/data/"
 
-bash EGM/verl/scripts/vllm_infer.sh
+cd EGM/verl/
+bash scripts/vllm_infer.sh
 ```
 
 ## Acknowledgment
