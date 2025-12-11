@@ -190,7 +190,7 @@ You may download the model for evaluation using the following command:
 hf download JamesZGQ/EGM-8B --local-dir ./models/EGM-8B
 ```
 
-To evaluate the model, install `sglang` with `pip install sglang==0.5.6` and use the command provided below.
+To evaluate the model, install `sglang` with `pip install sglang==0.5.5` and use the command provided below.
 
 **Note:** The RefCOCO benchmark consists of eight distinct JSON files. Consequently, you must run the evaluation script sequentially for each of the 8 files to obtain the complete benchmark results.
 
