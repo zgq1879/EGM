@@ -39,6 +39,19 @@ Our **EGM** models (2B/4B/8B) demonstrate superior scaling efficiency compared t
   <img src="images/tradeoff.png" width="90%"/>
 </div>
 
+The table below presents detailed results for EGM-4B and EGM-8B, comparing them against the baseline models as well as the Qwen3-VL-235B Instruct and Thinking variants:
+
+| Model | RefCOCO val | RefCOCO test-A | RefCOCO test-B | RefCOCO+ val | RefCOCO+ test-A | RefCOCO+ test-B | RefCOCOg val | RefCOCOg test | Avg. Acc |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| Qwen3-VL-4B-Thinking | 90.0 | 92.7 | 85.6 | 85.2 | 89.5 | 79.3 | 87.8 | 87.7 | 87.2 |
+| **EGM-4B** | 93.5 | 95.1 | 90.9 | 89.7 | 93.1 | 84.9 | 90.4 | 90.8 | **91.0** <sub>(+3.8↑)</sub> |
+| Qwen3-VL-8B-Thinking | 91.0 | 92.9 | 86.9 | 86.2 | 89.3 | 80.2 | 87.6 | 88.6 | 87.8 |
+| **EGM-8B** | 93.9 | 95.0 | 91.2 | 90.1 | 93.3 | 85.9 | 90.4 | 91.2 | **91.4** <sub>(+3.6↑)</sub> |
+| Qwen3-VL-235B-A22B-Instruct | 92.9 | 94.6 | 90.2 | 88.6 | 92.4 | 84.2 | 90.3 | 90.8 | 90.5 |
+| Qwen3-VL-235B-A22B-Thinking | 92.9 | 94.1 | 90.6 | 89.5 | 92.5 | 85.5 | 90.4 | 90.5 | 90.7 |
+
+We provide RL model checkpoints for both [EGM-Qwen3-VL-4B-v1](https://huggingface.co/JamesZGQ/EGM-4B) and [EGM-Qwen3-VL-8B-v1](https://huggingface.co/JamesZGQ/EGM-8B). You may download these checkpoints and evaluate them following the instructions in the [Evaluation](#evaluation).
+
 ## Dataset and Models
 
 You can download our datasets and models from HuggingFace using the commands below:
@@ -57,16 +70,6 @@ If you wish to directly use our pre-trained EGM-Qwen3-VL-8B-SFT model for develo
 ```bash
 hf download JamesZGQ/EGM-8B-SFT --local-dir ./models/EGM-8B-SFT
 ```
-
-
-We provide the SFT and RL model checkpoints for both EGM-Qwen3-VL-4B and EGM-Qwen3-VL-8B, as listed below:
-
-| Training Phase | Model |
-| :--- | :--- | 
-| Supervised Fine-Tuning (SFT) | [EGM-Qwen3-VL-4B-SFT](https://huggingface.co/JamesZGQ/EGM-4B-SFT) |
-| Reinforcement Learning | [EGM-Qwen3-VL-4B-v1](https://huggingface.co/JamesZGQ/EGM-4B) | 
-| Supervised Fine-Tuning (SFT) | [EGM-Qwen3-VL-8B-SFT](https://huggingface.co/JamesZGQ/EGM-8B-SFT) | 
-| Reinforcement Learning | [EGM-Qwen3-VL-8B-v1](https://huggingface.co/JamesZGQ/EGM-8B)  | 
 
 **Note**: If you are prohibited from the internet, please try to use the HF Mirror:
 
