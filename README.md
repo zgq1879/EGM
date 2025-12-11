@@ -201,7 +201,7 @@ export BASE_DIR=$(pwd)
 export MODEL_PATH="${BASE_DIR}/models/EGM-8B"
 export DATA_JSON="${BASE_DIR}/data/EGM_Datasets/metadata/eval/refcoco+_testA.jsonl"
 export OUTPUT_DIR="${BASE_DIR}/result/"
-export BASE_IMG_PATH="${BASE_DIR}/data/"
+export BASE_IMG_DIR="${BASE_DIR}/data/"
 
 cd EGM/verl/
 bash scripts/sglang_infer.sh
@@ -214,7 +214,7 @@ export BASE_DIR=$(pwd)
 export MODEL_PATH="${BASE_DIR}/models/EGM-8B"
 export DATA_JSON="${BASE_DIR}/data/EGM_Datasets/metadata/eval/refcoco+_testA.jsonl"
 export OUTPUT_DIR="${BASE_DIR}/result/"
-export BASE_IMG_PATH="${BASE_DIR}/data/"
+export BASE_IMG_DIR="${BASE_DIR}/data/"
 
 cd EGM/verl/
 bash scripts/vllm_infer.sh
