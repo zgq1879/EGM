@@ -89,9 +89,12 @@ pip install -r sft/requirement_sft.txt
 To train the EGM-Qwen3-VL-8B-SFT model, execute the following commands:
 
 ```bash
-export REFCOCO_ANNOTATION_PATH=../data/EGM_Datasets/vanilla_grounding_reasoning_training_dataset_cot_subset.jsonl
-export REFCOCO_DATA_PATH=../data/images/refcoco
-export OUTPUT_DIR=../models/EGM-8B-SFT
+export BASE_DIR=$(cd .. && pwd)
+export REFCOCO_ANNOTATION_PATH="${BASE_DIR}/data/EGM_Datasets/vanilla_grounding_reasoning_training_dataset_cot_subset.jsonl"
+export REFCOCO_DATA_PATH="${BASE_DIR}/data/images/refcoco"
+export OUTPUT_DIR="${BASE_DIR}/models/EGM-8B-SFT"
+
+
 cd sft/qwen-vl-finetune
 bash scripts/sft_qwen3_8b_grounding.sh
 ```
@@ -153,9 +156,11 @@ To initiate training, execute the script below from within the `/EGM` directory:
 export WANDB_BASE_URL=${YOUR_WANDB_BASE_URL}   
 export WANDB_API_KEY=${YOUR_WANDB_API_KEY} 
 
-export MODEL_PATH=../models/EGM-8B-SFT
-export OUTPUT_DIR=../checkpoint/
-export DATA_DIR=../data/EGM_Datasets/processed_rl_data/
+
+export BASE_DIR=$(cd .. && pwd)
+export MODEL_PATH="${BASE_DIR}/models/EGM-8B-SFT"
+export OUTPUT_DIR="${BASE_DIR}/checkpoint/"
+export DATA_DIR="${BASE_DIR}/data/EGM_Datasets/processed_rl_data/"
 
 cd verl
 bash scripts/grounding_qwen.sh
@@ -180,25 +185,24 @@ To evaluate the model, install `sglang` with `pip install sglang==0.5.6` and use
 The following example demonstrates evaluation using `refcoco+_testA.jsonl:`
 
 ```bash
-cd EGM/verl
-export MODEL_PATH=../models/EGM-8B
-export DATA_JSON=../data/EGM_Datasets/metadata/eval/refcoco+_testA.jsonl
-export OUTPUT_DIR=../result/
-export BASE_IMG_PATH=../data/
-
-bash verl/scripts/sglang_infer.sh
+export BASE_DIR=$(pwd)
+export MODEL_PATH="${BASE_DIR}/models/EGM-8B"
+export DATA_JSON="${BASE_DIR}/data/EGM_Datasets/metadata/eval/refcoco+_testA.jsonl"
+export OUTPUT_DIR="${BASE_DIR}/result/"
+export BASE_IMG_PATH="${BASE_DIR}/data/"
+bash EGM/verl/scripts/sglang_infer.sh
 ```
 
 We also support evaluation with vLLM:
 
 ```bash
-cd EGM/verl
-export MODEL_PATH=../models/EGM-8B
-export DATA_JSON=../data/EGM_Datasets/metadata/eval/refcoco+_testA.jsonl
-export OUTPUT_DIR=../result/
-export BASE_IMG_PATH=../data/
+export BASE_DIR=$(pwd)
+export MODEL_PATH="${BASE_DIR}/models/EGM-8B"
+export DATA_JSON="${BASE_DIR}/data/EGM_Datasets/metadata/eval/refcoco+_testA.jsonl"
+export OUTPUT_DIR="${BASE_DIR}/result/"
+export BASE_IMG_PATH="${BASE_DIR}/data/"
 
-bash scripts/vllm_infer.sh
+bash EGM/verl/scripts/vllm_infer.sh
 ```
 
 ## Acknowledgment
