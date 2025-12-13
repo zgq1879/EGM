@@ -9,6 +9,7 @@ First, download the original RefCOCO train [annotations](https://huggingface.co/
 ```bash
 hf download JamesZGQ/EGM_Datasets --repo-type=dataset --local-dir ./EGM_Datasets
 cd EGM_Datasets
+cat coco.tar.part_* > coco.tar
 tar -xvf coco.tar
 tar -xvf coco_flip.tar
 ```
