@@ -54,7 +54,7 @@ You can download our datasets and models from HuggingFace using the commands bel
 ```bash
 pip install -U huggingface_hub
 hf download Qwen/Qwen3-VL-8B-Thinking --local-dir ./models/Qwen3-VL-8B-Thinking
-hf download JamesZGQ/EGM_Datasets --local-dir ./data/EGM_Datasets
+hf download JamesZGQ/EGM_Datasets --local-dir ./data/EGM_Datasets --repo-type dataset
 cat ./data/EGM_Datasets/coco.tar.part_* > ./data/EGM_Datasets/coco.tar
 tar -xvf ./data/EGM_Datasets/coco.tar -C ./data/
 tar -xvf ./data/EGM_Datasets/coco_flip.tar -C ./data/
@@ -84,6 +84,17 @@ conda create -n EGM python=3.11.13
 conda activate EGM
 pip install -r requirement.txt
 ```
+
+if you need to install cuda toolkit on your machine, run the following commands to create the environment:
+
+```bash
+git clone https://github.com/zgq1879/EGM.git
+cd EGM
+conda create -n EGM -y -c nvidia/label/cuda-12.9.0 -c nvidia -c conda-forge python=3.11.13 cuda-toolkit=12.9
+conda activate EGM
+pip install -r requirement.txt
+```
+
 
 ## SFT Training
 
@@ -136,6 +147,7 @@ Reinforcement Learning is conducted based on the SFT checkpoint. The default con
 We provide the necessary training and validation sets in Parquet format for EGM-Qwen3-VL-8B-v1. Please use the following code to replace the relative image paths within the Parquet files:
 
 ```bash
+cd ../../../
 export BASE_DIR=$(pwd)
 python EGM/verl/scripts/replace_img_dir.py \
   --parquet_path ./data/EGM_Datasets/processed_rl_data/train_grounding.parquet  \
@@ -153,6 +165,8 @@ To initiate training, execute the script below from within the `/EGM` directory:
 
 ```bash
 
+cd EGM
+
 # Configure Weights & Biases (W&B) for experiment tracking
 export WANDB_BASE_URL=${YOUR_WANDB_BASE_URL}   
 export WANDB_API_KEY=${YOUR_WANDB_API_KEY} 
@@ -165,6 +179,8 @@ export DATA_DIR="${BASE_DIR}/data/EGM_Datasets/processed_rl_data/"
 
 cd verl
 bash scripts/grounding_qwen.sh
+
+ray stop -f
 ```
 
 <!-- ### 6. Handling Environment Issues
@@ -186,6 +202,8 @@ To evaluate the model, install `sglang` with `pip install sglang==0.5.5` and use
 The following example demonstrates evaluation using `refcoco+_testA.jsonl:`
 
 ```bash
+cd ../../
+
 export BASE_DIR=$(pwd)
 export MODEL_PATH="${BASE_DIR}/models/EGM-8B"
 export DATA_JSON="${BASE_DIR}/data/EGM_Datasets/metadata/eval/refcoco+_testA.jsonl"
@@ -199,6 +217,8 @@ bash scripts/sglang_infer.sh
 We also support evaluation with vLLM:
 
 ```bash
+cd ../../
+
 export BASE_DIR=$(pwd)
 export MODEL_PATH="${BASE_DIR}/models/EGM-8B"
 export DATA_JSON="${BASE_DIR}/data/EGM_Datasets/metadata/eval/refcoco+_testA.jsonl"
