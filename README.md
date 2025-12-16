@@ -148,10 +148,16 @@ We provide the necessary training and validation sets in Parquet format for EGM-
 
 ```bash
 cd ../../../
+# now at the parent folder of `EGM`
+
 export BASE_DIR=$(pwd)
+
+# prepare the train data
 python EGM/verl/scripts/replace_img_dir.py \
   --parquet_path ./data/EGM_Datasets/processed_rl_data/train_grounding.parquet  \
   --base_img_root ${BASE_DIR}/data/
+
+# prepare the val data
 python EGM/verl/scripts/replace_img_dir.py \
   --parquet_path ./data/EGM_Datasets/processed_rl_data/val_grounding.parquet  \
   --base_img_root ${BASE_DIR}/data/
