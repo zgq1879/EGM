@@ -45,34 +45,6 @@ The table below presents detailed results for EGM-4B and EGM-8B, comparing them 
   <img src="images/ShortResult.png" width="90%"/>
 </div>
 
-We provide RL model checkpoints for both [EGM-Qwen3-VL-4B-v1](https://huggingface.co/JamesZGQ/EGM-4B) and [EGM-Qwen3-VL-8B-v1](https://huggingface.co/JamesZGQ/EGM-8B). You may download these checkpoints and evaluate them following the instructions in the [Evaluation](#evaluation).
-
-## Dataset and Models
-
-You can download our datasets and models from HuggingFace using the commands below:
-
-```bash
-pip install -U huggingface_hub
-hf download Qwen/Qwen3-VL-8B-Thinking --local-dir ./models/Qwen3-VL-8B-Thinking
-hf download JamesZGQ/EGM_Datasets --local-dir ./data/EGM_Datasets --repo-type dataset
-cat ./data/EGM_Datasets/coco.tar.part_* > ./data/EGM_Datasets/coco.tar
-tar -xvf ./data/EGM_Datasets/coco.tar -C ./data/
-tar -xvf ./data/EGM_Datasets/coco_flip.tar -C ./data/
-```
-
-
-If you wish to directly use our pre-trained EGM-Qwen3-VL-8B-SFT model for development, use the following command to download it. Afterward, please refer to the [RL Training](#rl-training) section for training instructions.
-
-```bash
-hf download JamesZGQ/EGM-8B-SFT --local-dir ./models/EGM-8B-SFT
-```
-
-**Note**: If you are prohibited from the internet, please try to use the HF Mirror:
-
-```bash
-export HF_ENDPOINT=https://hf-mirror.com
-```
-
 ## Installation
 
 Run the following commands to create the environment for training:
@@ -95,17 +67,81 @@ conda activate EGM
 pip install -r requirement.txt
 ```
 
+## Evaluation
+
+```bash
+hf download JamesZGQ/EGM-8B --local-dir ./models/EGM-8B
+hf download JamesZGQ/EGM-4B --local-dir ./models/EGM-4B
+```
+
+To evaluate the model, install `sglang` with `pip install sglang==0.5.5` and use the command provided below.
+
+**Note:** The RefCOCO benchmark consists of eight distinct JSON files. Consequently, you must run the evaluation script sequentially for each of the 8 files to obtain the complete benchmark results.
+
+The following example demonstrates evaluation using `refcoco+_testA.jsonl`:
+
+```bash
+export BASE_DIR=$(pwd) # In the EGM folder
+export MODEL_PATH="${BASE_DIR}/models/EGM-8B"
+export DATA_JSON="${BASE_DIR}/data/EGM_Datasets/metadata/eval/refcoco+_testA.jsonl"
+export OUTPUT_DIR="${BASE_DIR}/result/"
+export BASE_IMG_DIR="${BASE_DIR}"
+
+cd verl
+bash scripts/sglang_infer.sh
+```
+
+We also support evaluation with vLLM:
+
+```bash
+export BASE_DIR=$(pwd) # In the EGM folder
+export MODEL_PATH="${BASE_DIR}/models/EGM-8B"
+export DATA_JSON="${BASE_DIR}/data/EGM_Datasets/metadata/eval/refcoco+_testA.jsonl"
+export OUTPUT_DIR="${BASE_DIR}/result/"
+export BASE_IMG_DIR="${BASE_DIR}"
+
+cd verl
+bash scripts/vllm_infer.sh
+```
+
+## Dataset and Models
+
+You can download our datasets and models from HuggingFace using the commands below:
+
+```bash
+pip install -U huggingface_hub
+hf download Qwen/Qwen3-VL-8B-Thinking --local-dir ./models/Qwen3-VL-8B-Thinking
+hf download JamesZGQ/EGM_Datasets --local-dir ./data/EGM_Datasets --repo-type dataset
+cat ./data/EGM_Datasets/coco.tar.part_* > ./data/EGM_Datasets/coco.tar
+tar -xvf ./data/EGM_Datasets/coco.tar -C ./data/
+tar -xvf ./data/EGM_Datasets/coco_flip.tar -C ./data/
+```
+
+
+If you wish to directly use our pre-trained EGM-Qwen3-VL-8B-SFT model for development, use the following command to download it. Afterward, please refer to the [RL Training](#rl-training) section for training instructions.
+
+```bash
+hf download JamesZGQ/EGM-8B-SFT --local-dir ./models/EGM-8B-SFT
+```
+
+**Note**: If you fail to connect [HuggingFace](https://huggingface.co/), please try to use the HF Mirror:
+
+```bash
+export HF_ENDPOINT=https://hf-mirror.com
+```
 
 ## SFT Training
 
 To train the EGM-Qwen3-VL-8B-SFT model, execute the following commands within the `/EGM` directory:
 
 ```bash
-export BASE_DIR=$(cd .. && pwd)
+export BASE_DIR=$(pwd)
 export REFCOCO_ANNOTATION_PATH="${BASE_DIR}/data/EGM_Datasets/vanilla_grounding_reasoning_training_dataset_cot_subset.jsonl"
 export REFCOCO_DATA_PATH="${BASE_DIR}/data/"
 export OUTPUT_DIR="${BASE_DIR}/models/EGM-8B-SFT"
-
+export WANDB_BASE_URL=${YOUR_WANDB_BASE_URL}   
+export WANDB_API_KEY=${YOUR_WANDB_API_KEY} 
+export WANDB_PROJECT="EGM-SFT"
 
 cd sft/qwen-vl-finetune
 bash scripts/sft_qwen3_8b_grounding.sh
@@ -115,50 +151,24 @@ We have provided a 1k subset `vanilla_grounding_reasoning_training_dataset_cot_s
 
 ## RL Training
 
-<!-- We provide the Grounding training and inference workflow for the **EGM-8B** model as the primary example below. -->
-
-<!-- 安装部分有两个问题需要check，一个是我们这边的机器只能用docker启动，启动以后没有办法安装cuda配置，所以我后面使用了一个pytorch/pytorch:2.8.0-cuda12.9-cudnn9-devel作为基础镜像测试，因此最理想的情况下是有一台公开的conda机器可以重新测试一下
-此外我这边连接不了外网因此flash-attn也需要测试一下https://github.com/Dao-AILab/flash-attention/releases/download/v2.8.3/flash_attn-2.8.3+cu12torch2.8cxx11abiFALSE-cp311-cp311-linux_x86_64.whl能不能正常安装 -->
-
-
-<!-- ### 3. Data Preparation
-
-Please download the training and testing datasets before proceeding.
-
-[Training annotations](https://huggingface.co/datasets/JamesZGQ/EGM_Datasets/tree/main/train_data) |
-[Testing annotations](https://huggingface.co/datasets/JamesZGQ/EGM_Datasets/tree/main/eval_data) |
-[Images tar1](https://huggingface.co/datasets/JamesZGQ/EGM_Datasets/blob/main/coco.tar) |
-[Images tar2](https://huggingface.co/datasets/JamesZGQ/EGM_Datasets/blob/main/coco_flip.tar)
-
-```bash
-# Set your environment variables
-export BASE_IMG_PATH=${YOUR_BASE_IMG_PATH}
-export OUTPUT_DIR=${YOUR_DATA_DIR}
-export VAL_DIR=${YOUR_VAL_DIR}
-export TRAIN_JSON=${QWEN3_8B_GROUNDING_TRAIN_JSON}
-
-# Run preprocessing scripts
-bash examples/data_preprocess/grounding_val.sh
-bash examples/data_preprocess/grounding_all.sh
-``` -->
 
 Reinforcement Learning is conducted based on the SFT checkpoint. The default configuration utilizes 8 GPUs. You may customize the distributed training settings via the `trainer.nnodes` and `trainer.n_gpus_per_node` arguments. 
 
 We provide the necessary training and validation sets in Parquet format for EGM-Qwen3-VL-8B-v1. Please use the following code to replace the relative image paths within the Parquet files:
 
 ```bash
-cd ../../../
-# now at the parent folder of `EGM`
+cd ../../
+# now at the `EGM` folder 
 
 export BASE_DIR=$(pwd)
 
 # prepare the train data
-python EGM/verl/scripts/replace_img_dir.py \
+python ./verl/scripts/replace_img_dir.py \
   --parquet_path ./data/EGM_Datasets/processed_rl_data/train_grounding.parquet  \
   --base_img_root ${BASE_DIR}/data/
 
 # prepare the val data
-python EGM/verl/scripts/replace_img_dir.py \
+python ./verl/scripts/replace_img_dir.py \
   --parquet_path ./data/EGM_Datasets/processed_rl_data/val_grounding.parquet  \
   --base_img_root ${BASE_DIR}/data/
 ```
@@ -170,15 +180,12 @@ Alternatively, you may construct the datasets manually using `verl/examples/data
 To initiate training, execute the script below from within the `/EGM` directory:
 
 ```bash
-
-cd EGM
-
 # Configure Weights & Biases (W&B) for experiment tracking
 export WANDB_BASE_URL=${YOUR_WANDB_BASE_URL}   
 export WANDB_API_KEY=${YOUR_WANDB_API_KEY} 
 
 
-export BASE_DIR=$(cd .. && pwd)
+export BASE_DIR=$(pwd)
 export MODEL_PATH="${BASE_DIR}/models/EGM-8B-SFT"
 export OUTPUT_DIR="${BASE_DIR}/checkpoint/"
 export DATA_DIR="${BASE_DIR}/data/EGM_Datasets/processed_rl_data/"
@@ -187,52 +194,6 @@ cd verl
 bash scripts/grounding_qwen.sh
 
 ray stop -f
-```
-
-<!-- ### 6. Handling Environment Issues
-
-1. If you encounter runtime errors related to FlashInfer, such as `GLIBC_2.32' not found (required by .../flashinfer/.../sampling.so)`, you can work around this by disabling the FlashInfer sampler: set the environment variable `VLLM_USE_FLASHINFER_SAMPLER=0` or `SGLANG_IS_FLASHINFER_AVAILABLE=false` before launching the training or inference command. -->
-
-## Evaluation
-
-You may download the model for evaluation using the following command:
-
-```bash
-hf download JamesZGQ/EGM-8B --local-dir ./models/EGM-8B
-```
-
-To evaluate the model, install `sglang` with `pip install sglang==0.5.5` and use the command provided below.
-
-**Note:** The RefCOCO benchmark consists of eight distinct JSON files. Consequently, you must run the evaluation script sequentially for each of the 8 files to obtain the complete benchmark results.
-
-The following example demonstrates evaluation using `refcoco+_testA.jsonl:`
-
-```bash
-cd ../../
-
-export BASE_DIR=$(pwd)
-export MODEL_PATH="${BASE_DIR}/models/EGM-8B"
-export DATA_JSON="${BASE_DIR}/data/EGM_Datasets/metadata/eval/refcoco+_testA.jsonl"
-export OUTPUT_DIR="${BASE_DIR}/result/"
-export BASE_IMG_DIR="${BASE_DIR}"
-
-cd EGM/verl/
-bash scripts/sglang_infer.sh
-```
-
-We also support evaluation with vLLM:
-
-```bash
-cd ../../
-
-export BASE_DIR=$(pwd)
-export MODEL_PATH="${BASE_DIR}/models/EGM-8B"
-export DATA_JSON="${BASE_DIR}/data/EGM_Datasets/metadata/eval/refcoco+_testA.jsonl"
-export OUTPUT_DIR="${BASE_DIR}/result/"
-export BASE_IMG_DIR="${BASE_DIR}"
-
-cd EGM/verl/
-bash scripts/vllm_infer.sh
 ```
 
 ## Acknowledgment
