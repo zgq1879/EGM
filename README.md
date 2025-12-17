@@ -172,7 +172,7 @@ We provide the necessary training and validation sets in Parquet format for EGM-
 
 ```bash
 cd ../../
-# now at the `EGM` folder 
+# Now at the `EGM` folder 
 
 export BASE_DIR=$(pwd)
 
