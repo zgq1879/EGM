@@ -93,7 +93,8 @@ To evaluate the model, install `sglang` with `pip install sglang==0.5.5` and use
 The following example demonstrates evaluation using `refcoco+_testA.jsonl`:
 
 ```bash
-export BASE_DIR=$(pwd) # In the EGM folder
+# In the EGM folder
+export BASE_DIR=$(pwd) 
 export MODEL_PATH="${BASE_DIR}/models/EGM-8B"
 export DATA_JSON="${BASE_DIR}/data/EGM_Datasets/metadata/eval/refcoco+_testA.jsonl"
 export OUTPUT_DIR="${BASE_DIR}/result/"
@@ -106,7 +107,8 @@ bash scripts/sglang_infer.sh
 We also support evaluation with vLLM:
 
 ```bash
-export BASE_DIR=$(pwd) # In the EGM folder
+# In the EGM folder
+export BASE_DIR=$(pwd) 
 export MODEL_PATH="${BASE_DIR}/models/EGM-8B"
 export DATA_JSON="${BASE_DIR}/data/EGM_Datasets/metadata/eval/refcoco+_testA.jsonl"
 export OUTPUT_DIR="${BASE_DIR}/result/"
