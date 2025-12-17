@@ -14,10 +14,10 @@ See our website for more details : https://zgq1879.github.io/EGM_website/
 ### Table of Contents  <!-- omit in toc -->
 
   - [Bigger or Longer? Test-Time-Scaling is More Efficient than Model-Size-Scaling for Visual Grounding](#bigger-or-longer-test-time-scaling-is-more-efficient-than-model-size-scaling-for-visual-grounding-1)
+  - [Evaluation](#evaluation)
   - [Dataset and Models](#dataset-and-models)
   - [SFT Training](#sft-training)
   - [RL Training](#rl-training)
-  - [Evaluation](#evaluation)
   - [Acknowledgment](#acknowledgment)
 
 ## Bigger or Longer? Test-Time-Scaling is More Efficient than Model-Size-Scaling for Visual Grounding
