@@ -69,9 +69,17 @@ pip install -r requirement.txt
 
 ## Evaluation
 
+你可以下载我们的模型和测试集进行evaluation
 ```bash
+# Models
 hf download JamesZGQ/EGM-8B --local-dir ./models/EGM-8B
 hf download JamesZGQ/EGM-4B --local-dir ./models/EGM-4B
+
+# Datasets
+hf download JamesZGQ/EGM_Datasets --local-dir ./data/EGM_Datasets --repo-type dataset
+cat ./data/EGM_Datasets/coco.tar.part_* > ./data/EGM_Datasets/coco.tar
+tar -xvf ./data/EGM_Datasets/coco.tar -C ./data/
+tar -xvf ./data/EGM_Datasets/coco_flip.tar -C ./data/
 ```
 
 To evaluate the model, install `sglang` with `pip install sglang==0.5.5` and use the command provided below.
@@ -106,11 +114,14 @@ bash scripts/vllm_infer.sh
 
 ## Dataset and Models
 
-You can download our datasets and models from HuggingFace using the commands below:
+You can download the base model and our datasets from HuggingFace using the commands below:
+
 
 ```bash
 pip install -U huggingface_hub
 hf download Qwen/Qwen3-VL-8B-Thinking --local-dir ./models/Qwen3-VL-8B-Thinking
+
+# 如果你在先前的Evaluation部分已经下载和处理了这些数据，下面的命令可以跳过
 hf download JamesZGQ/EGM_Datasets --local-dir ./data/EGM_Datasets --repo-type dataset
 cat ./data/EGM_Datasets/coco.tar.part_* > ./data/EGM_Datasets/coco.tar
 tar -xvf ./data/EGM_Datasets/coco.tar -C ./data/
@@ -147,7 +158,7 @@ cd sft/qwen-vl-finetune
 bash scripts/sft_qwen3_8b_grounding.sh
 ```
 
-We have provided a 1k subset `vanilla_grounding_reasoning_training_dataset_cot_subset.jsonl` here solely as an example for SFT. For further details on full SFT data construction and training other models, please refer to`sft/README.md`.
+The finetuned model is saved in `${BASE_DIR}/models/EGM-8B-SFT`. In this repository, we provide a 1k subset `vanilla_grounding_reasoning_training_dataset_cot_subset.jsonl`  solely as an example for SFT. For further details on full SFT data construction and training other models, please refer to`sft/README.md`.
 
 ## RL Training
 
