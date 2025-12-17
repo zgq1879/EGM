@@ -60,7 +60,7 @@ conda activate EGM
 pip install -r requirement.txt
 ```
 
-If you need to install cuda toolkit on your machine, run the following commands to create the environment:
+**Note:** If you need to install cuda toolkit on your machine, run the following commands to create the environment:
 
 ```bash
 git clone https://github.com/zgq1879/EGM.git
