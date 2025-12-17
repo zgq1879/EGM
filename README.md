@@ -1,9 +1,9 @@
 <h1 align="center">Bigger or Longer? Test-Time-Scaling is More Efficient<br> than Model-Size-Scaling for Visual Grounding  </h1>
 
 
-This repository releases the official implementation of Bigger or Longer?Test-Time-Scaling is More Efficient than Model-Size-Scaling for Visual Grounding. 
+This repository releases the official implementation of [Bigger or Longer?Test-Time-Scaling is More Efficient than Model-Size-Scaling for Visual Grounding](https://zgq1879.github.io/EGM_website/). 
 
-这里差一个文章地址
+
 
 ## Abstract
 
