@@ -14,6 +14,7 @@ See our website for more details : https://zgq1879.github.io/EGM_website/
 ### Table of Contents  <!-- omit in toc -->
 
   - [Bigger or Longer? Test-Time-Scaling is More Efficient than Model-Size-Scaling for Visual Grounding](#bigger-or-longer-test-time-scaling-is-more-efficient-than-model-size-scaling-for-visual-grounding-1)
+  - [Installationn](#installation)
   - [Evaluation](#evaluation)
   - [Dataset and Models](#dataset-and-models)
   - [SFT Training](#sft-training)
@@ -44,6 +45,8 @@ The table below presents detailed results for EGM-4B and EGM-8B, comparing them 
 <div align="center">
   <img src="images/ShortResult.png" width="90%"/>
 </div>
+
+We provide RL model checkpoints for both [EGM-Qwen3-VL-4B-v1](https://huggingface.co/JamesZGQ/EGM-4B) and [EGM-Qwen3-VL-8B-v1](https://huggingface.co/JamesZGQ/EGM-8B). You may download these checkpoints and evaluate them following the instructions in the [Installationn](#installation) and  the [Evaluation](#evaluation).
 
 ## Installation
 
