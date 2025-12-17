@@ -50,7 +50,7 @@ We provide RL model checkpoints for both [EGM-Qwen3-VL-4B-v1](https://huggingfac
 
 ## Installation
 
-Run the following commands to create the environment for training:
+Run the following commands to create the environment:
 
 ```bash
 git clone https://github.com/zgq1879/EGM.git
