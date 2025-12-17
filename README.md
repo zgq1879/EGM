@@ -57,7 +57,7 @@ conda activate EGM
 pip install -r requirement.txt
 ```
 
-if you need to install cuda toolkit on your machine, run the following commands to create the environment:
+If you need to install cuda toolkit on your machine, run the following commands to create the environment:
 
 ```bash
 git clone https://github.com/zgq1879/EGM.git
@@ -69,7 +69,8 @@ pip install -r requirement.txt
 
 ## Evaluation
 
-你可以下载我们的模型和测试集进行evaluation
+You can directly download our model and test datasets for evaluation with the commands below:
+
 ```bash
 # Models
 hf download JamesZGQ/EGM-8B --local-dir ./models/EGM-8B
@@ -116,12 +117,11 @@ bash scripts/vllm_infer.sh
 
 You can download the base model and our datasets from HuggingFace using the commands below:
 
-
 ```bash
 pip install -U huggingface_hub
 hf download Qwen/Qwen3-VL-8B-Thinking --local-dir ./models/Qwen3-VL-8B-Thinking
 
-# 如果你在先前的Evaluation部分已经下载和处理了这些数据，下面的命令可以跳过
+# If you have already downloaded and processed this data in the previous Evaluation section, you can skip the commands below.
 hf download JamesZGQ/EGM_Datasets --local-dir ./data/EGM_Datasets --repo-type dataset
 cat ./data/EGM_Datasets/coco.tar.part_* > ./data/EGM_Datasets/coco.tar
 tar -xvf ./data/EGM_Datasets/coco.tar -C ./data/
